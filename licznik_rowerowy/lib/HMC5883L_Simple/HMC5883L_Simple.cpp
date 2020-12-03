@@ -120,10 +120,10 @@ float HMC5883L_Simple::GetHeadingDegrees()
   // Z = bits 0-2
   switch((mode >> 5) & 0x07 )
   {
-    case COMPASS_EAST: mag_north = sample.Z; break;
-    case COMPASS_WEST: mag_north = 0-sample.Z; break;
-    case COMPASS_NORTH:  mag_west  = sample.Z; break;
-    case COMPASS_SOUTH:  mag_west  = 0-sample.Z; break;
+    case COMPASS_NORTH: mag_north = sample.Z; break;
+    case COMPASS_SOUTH: mag_north = 0-sample.Z; break;
+    case COMPASS_WEST:  mag_west  = sample.Z; break;
+    case COMPASS_EAST:  mag_west  = 0-sample.Z; break;
       
     // Don't care
     case COMPASS_UP:
@@ -134,10 +134,10 @@ float HMC5883L_Simple::GetHeadingDegrees()
   // Y = bits 3 - 5
   switch(((mode >> 5) >> 3) & 0x07 )
   {
-    case COMPASS_EAST: mag_north = sample.Y;  break;
-    case COMPASS_WEST: mag_north = 0-sample.Y; ;  break;
-    case COMPASS_NORTH:  mag_west  = sample.Y;  break;
-    case COMPASS_SOUTH:  mag_west  = 0-sample.Y;  break;
+    case COMPASS_NORTH: mag_north = sample.Y;  break;
+    case COMPASS_SOUTH: mag_north = 0-sample.Y; ;  break;
+    case COMPASS_WEST:  mag_west  = sample.Y;  break;
+    case COMPASS_EAST:  mag_west  = 0-sample.Y;  break;
       
     // Don't care
     case COMPASS_UP:
@@ -148,10 +148,10 @@ float HMC5883L_Simple::GetHeadingDegrees()
   // X = bits 6 - 8
   switch(((mode >> 5) >> 6) & 0x07 )
   {
-    case COMPASS_EAST: mag_north = sample.X; break;
-    case COMPASS_WEST: mag_north = 0-sample.X; break;
-    case COMPASS_NORTH:  mag_west  = sample.X; break;
-    case COMPASS_SOUTH:  mag_west  = 0-sample.X; break;
+    case COMPASS_NORTH: mag_north = sample.X; break;
+    case COMPASS_SOUTH: mag_north = 0-sample.X; break;
+    case COMPASS_WEST:  mag_west  = sample.X; break;
+    case COMPASS_EAST:  mag_west  = 0-sample.X; break;
       
     // Don't care
     case COMPASS_UP:
