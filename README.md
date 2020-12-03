@@ -23,5 +23,3 @@
     - ?? - do obsługi LCD,
     - ?? - do obsługi czujnika Halla.
 - IDE: VSCode i PlatformIO
-
-test
