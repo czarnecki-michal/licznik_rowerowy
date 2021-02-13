@@ -35,6 +35,16 @@ int count_avg = 0;
 float old_rpm = 0;
 int hall_thresh = 10;
 
+int speed_index = 0;
+const int speed_size = 20;
+float speed_array[speed_size];
+bool speed_full = 0;
+
+int cad_index = 0;
+const int cad_size = 20;
+float cad_array[speed_size];
+bool cad_full = 0;
+
 void displayGpsInfo();
 float countRpm();
 static void smartDelay();
@@ -63,10 +73,16 @@ void setup()
 void loop()
 {
   float start_2 = millis();
-  while(millis() - start_2 < 800){
-    avg_cadency = countAvgRpm();
+  while(millis() - start_2 < 500){
     cadency = countRpm();
   }
+  avg_cadency = getAvgCad(cadency);
+
+  for(int i=0;i<cad_size;i++){
+    Serial.print(cad_array[i]);
+    Serial.print(" ");
+  }
+  Serial.println();
 
   display.showAvgCadency(avg_cadency);
   display.showCurCadency(cadency);
@@ -74,22 +90,81 @@ void loop()
   angle = Compass.GetHeadingDegrees();
 
   display.showCompass(angle);
-  display.showAvgSpeed(1.0);
 
   gps.getGpsInfo();
+
+  float speed = gps.getSpd();
+  float avg_speed = getAvgSpeed(speed);
+  display.showAvgSpeed(avg_speed);
+
   display.showCoords(gps.getLat(), gps.getLon(), gps.getAlt());
-  display.showCurSpeed(gps.getSpd());
+  display.showCurSpeed(speed);
   display.status(Compass, gps);
+
   smartDelay(20);
 }
 
-float countAvgRpm(){
-  float end_time = millis();
-  float time_passed = end_time / 1000.0;
-  float rpm_val = ((count_avg/2) / time_passed) * 60.0;
+float getAvgSpeed(float speed){
+  float sum = 0;
 
-  return rpm_val;
+  speed_array[speed_index] = speed;
+
+  speed_index++;
+
+  if (speed_index == speed_size){
+    speed_full = 1;
+    speed_index = 0;
+  }
+
+  if(speed_full == 0){
+    for(int i=0; i<speed_index+1; i++){
+      sum += speed_array[i];
+    }
+
+    return sum/(speed_index+1);
+  }else{
+    for(int i=0; i<speed_size; i++){
+      sum += speed_array[i];
+    }
+
+    return sum/speed_size;
+  }
 }
+
+float getAvgCad(float cad){
+  float sum = 0;
+
+  cad_array[cad_index] = cad;
+
+  cad_index++;
+
+  if (cad_index == cad_size){
+    cad_full = 1;
+    cad_index = 0;
+  }
+
+  if(cad_full == 0){
+    for(int i=0; i<cad_index+1; i++){
+      sum += cad_array[i];
+    }
+
+    return sum/(cad_index+1);
+  }else{
+    for(int i=0; i<cad_size; i++){
+      sum += cad_array[i];
+    }
+
+    return sum/cad_size;
+  }
+}
+
+// float countAvgRpm(){
+//   float end_time = millis();
+//   float time_passed = end_time / 1000.0;
+//   float rpm_val = ((count_avg/2) / time_passed) * 60.0;
+
+//   return rpm_val;
+// }
 
 float countRpm(){
   state = digitalRead(hall_pin);

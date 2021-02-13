@@ -1,0 +1,35 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\.."
+		},
+		{
+			"name": "licznik_rowerowy",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"cmath": "cpp",
+			"*.tcc": "cpp",
+			"unordered_map": "cpp",
+			"random": "cpp",
+			"functional": "cpp",
+			"system_error": "cpp",
+			"array": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"utility": "cpp",
+			"string": "cpp",
+			"algorithm": "cpp",
+			"memory": "cpp",
+			"memory_resource": "cpp",
+			"numeric": "cpp",
+			"optional": "cpp",
+			"fstream": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"string_view": "cpp"
+		}
+	}
+}

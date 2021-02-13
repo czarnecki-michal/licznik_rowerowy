@@ -17,7 +17,7 @@ public:
                       uint16_t f_color = 0xFFFF, uint16_t b_color = 0x0000);
     void showCoords(float lat, float lon, float alt);
     void showCurCadency(int cadency);
-    void showAvgCadency(int avg_cadency);
+    void showAvgCadency(float avg_cadency);
     void showCurSpeed(float speed);
     void showAvgSpeed(float avg_speed);
     void showCompass(int heading);

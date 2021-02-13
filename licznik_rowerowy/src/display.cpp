@@ -12,7 +12,7 @@ void Display::showGrid(){
     ILI9341_due::fillRect(0, 0, 320, 10, ILI9341_NAVY);
 }
 
-void Display::showAvgCadency(int avg_cadency){
+void Display::showAvgCadency(float avg_cadency){
     ILI9341_due::setTextScale(2);
     ILI9341_due::setTextColor(ILI9341_BLACK, ILI9341_LIGHTGREY);
     ILI9341_due::setTextArea(120, 230, 120, 100);
@@ -21,14 +21,14 @@ void Display::showAvgCadency(int avg_cadency){
     ILI9341_due::print("AVG CAD");
     ILI9341_due::setTextScale(2);
     ILI9341_due::cursorTo(1, 2);
-    if(avg_cadency < 100 && avg_cadency > 9){
-        ILI9341_due::print(" ");
-    }else if (avg_cadency < 10){
-        ILI9341_due::print("  ");
-    }
+    // if(avg_cadency < 100 && avg_cadency > 9){
+    //     ILI9341_due::print(" ");
+    // }else if (avg_cadency < 10){
+    //     ILI9341_due::print("  ");
+    // }
 
 
-    ILI9341_due::print(avg_cadency);
+    ILI9341_due::print(avg_cadency, 1);
 }
 
 void Display::showAvgSpeed(float avg_speed){
@@ -41,7 +41,7 @@ void Display::showAvgSpeed(float avg_speed){
 
     ILI9341_due::setTextScale(2);
     ILI9341_due::cursorTo(1, 2);
-    ILI9341_due::print(avg_speed);
+    ILI9341_due::print(avg_speed, 1);
 }
 
 void Display::showCurSpeed(float speed){
@@ -52,11 +52,11 @@ void Display::showCurSpeed(float speed){
     ILI9341_due::print("SPEED");
 
     ILI9341_due::setTextScale(6);
-    ILI9341_due::cursorTo(7, 1);
+    ILI9341_due::cursorTo(4, 1);
     ILI9341_due::print(speed, 1);
 
     ILI9341_due::setTextScale(2);
-    ILI9341_due::cursorTo(28, 3);
+    ILI9341_due::cursorTo(31, 3);
     ILI9341_due::print("KM/H");
 }
 
