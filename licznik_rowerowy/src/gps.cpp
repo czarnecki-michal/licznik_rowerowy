@@ -17,6 +17,12 @@ void GPS::getGpsInfo(){
       this->spd = GPS::speed.kmph();
     // this->spd++;
     }
+
+    if(GPS::date.isValid()){
+        this->year = GPS::date.year();
+        this->month = GPS::date.month();
+        this->day = GPS::date.day();
+    }
 }
 
 
@@ -34,4 +40,16 @@ float GPS::getAlt(){
 
 float GPS::getSpd(){
     return this->spd;
+}
+
+uint16_t GPS::getYear(){
+    return this->year;
+}
+
+uint16_t GPS::getMonth(){
+    return this->month;
+}
+
+uint16_t GPS::getDay(){
+    return this->day;
 }
