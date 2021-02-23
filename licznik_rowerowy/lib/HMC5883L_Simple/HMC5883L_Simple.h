@@ -71,7 +71,9 @@
 //  xxxxxxxxxxxxxxMM
 //  MODE:
 
+#define COMPASS_CONTINUOUS 0x00
 #define COMPASS_SINGLE     0x01
+#define COMPASS_IDLE       0x02
 
 //  xxxxxxxxxxxSSSxx
 //  SCALE:
@@ -79,7 +81,14 @@
 //   but "noisier", magentic noise may necessitate
 //   you to choose a higher scale.
 
+#define COMPASS_SCALE_088  0x00 << 2
+#define COMPASS_SCALE_130  0x01 << 2
+#define COMPASS_SCALE_190  0x02 << 2
 #define COMPASS_SCALE_250  0x03 << 2
+#define COMPASS_SCALE_400  0x04 << 2
+#define COMPASS_SCALE_470  0x05 << 2
+#define COMPASS_SCALE_560  0x06 << 2
+#define COMPASS_SCALE_810  0x07 << 2
 
 //  xxXXXYYYZZZxxxxx
 //  ORIENTATION: 

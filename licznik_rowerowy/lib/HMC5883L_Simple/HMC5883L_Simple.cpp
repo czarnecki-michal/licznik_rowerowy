@@ -42,7 +42,7 @@
 HMC5883L_Simple::HMC5883L_Simple()
 {
   declination_offset_radians = 0;
-  mode = COMPASS_SINGLE | COMPASS_SCALE_250 | COMPASS_HORIZONTAL_X_NORTH;  
+  mode = COMPASS_SINGLE | COMPASS_SCALE_130 | COMPASS_HORIZONTAL_X_NORTH;  
   i2c_address = COMPASS_I2C_ADDRESS;  // NB: The HMC5883L does not appear to be able to have any different address.
                                       //     so this is a bit moot.                                      
 }
