@@ -12,26 +12,30 @@
 #define TXPin 12
 #define hall_pin 34
 #define button_pin 0
+#define GPSBaud 9600
 
-int GPSBaud = 9600;
-GPS gps;
-SoftwareSerial gpsSerial(RXPin, TXPin);
-HMC5883L compass;
-Display display = Display();
+// zmienne okreslajace status podzespolow
+bool status_sd = 0;
+bool status_compass = 0;
 
+// zmienne okreslajace stan
 int button_prev;
 int file_created = 0;
 int activity_started = 0;
+int old_state = 0;
+int state = 0;
+float old_rpm = 0;
+long int last_gpx = 0;
+
+// zmienne przechowujace odczyty
 int angle = 0;
 float cadency = 0;
 float avg_cadency = 0;
-int old_state = 0;
-int state = 0;
 float start = 0;
 int count = 0;
 int count_avg = 0;
-float old_rpm = 0;
 
+// zmienne do obslugi wyznaczania srednich wartosci
 int speed_index = 0;
 const int speed_size = 20;
 float speed_array[speed_size];
@@ -42,7 +46,11 @@ const int cad_size = 20;
 float cad_array[speed_size];
 bool cad_full = 0;
 
-long int last_gpx = 0;
+// inicjalizacja komponentow
+GPS gps;
+SoftwareSerial gpsSerial(RXPin, TXPin);
+HMC5883L compass;
+Display display = Display();
 
 void createGpx(GPS &gps);
 static void smartDelay(unsigned long ms);
@@ -53,45 +61,42 @@ float countRpm();
 
 void setup()
 {
+  // inicjalizacja monitora portu szeregowego
   Serial.begin(9600);
   gpsSerial.begin(GPSBaud);
-  pinMode(button_pin, INPUT_PULLUP);
 
-  Serial.println("Initialize HMC5883L");
-  while (!compass.begin())
-  {
-    Serial.println("Could not find a valid HMC5883L sensor, check wiring!");
-    delay(500);
-  }
+  // ustalenie stanu podzespolow
+  status_compass = compass.begin();
+  status_sd = initializeSdCard();
 
+  // konfiguracja kompasu 
   compass.setRange(HMC5883L_RANGE_1_3GA);
   compass.setMeasurementMode(HMC5883L_CONTINOUS);
   compass.setDataRate(HMC5883L_DATARATE_0_75_HZ);
-  // Set number of samples averaged
   compass.setSamples(HMC5883L_SAMPLES_2);
-  // Set calibration offset. See HMC5883L_calibration.ino
   compass.setOffset(0, 0);
 
+  // inicjalizacja wyswietlacza
   display.init();
   display.setRotation(2);
   display.fillScreen(TFT_LIGHTGREY);
   display.setTextColor(TFT_BLACK, TFT_LIGHTGREY);
-
   display.showGrid();
-  display.status(compass, gps, 0);
-  button_prev = digitalRead(button_pin);
-  pinMode (hall_pin, INPUT);
 
-  initializeSdCard();
+  pinMode (hall_pin, INPUT);
+  pinMode(button_pin, INPUT_PULLUP);
+  button_prev = digitalRead(button_pin);
+
+  display.status(status_compass, gps, status_sd, 0);
 }
 
 void loop()
 {
+  // obsluga kompasu
   Vector norm = compass.readNormalize();
   float heading = atan2(norm.YAxis, norm.XAxis);
   float declinationAngle = (4.0 + (26.0 / 60.0)) / (180 / M_PI);
   heading += declinationAngle;
-
   if (heading < 0)
   {
     heading += 2 * PI;
@@ -101,38 +106,48 @@ void loop()
   {
     heading -= 2 * PI;
   }
-
+  
+  // pobranie danych z GPS
   gps.getGpsInfo();
   float speed = gps.getSpd();
+  smartDelay(20);
+
+  // wyznaczenie kadencji
   float start_2 = millis();
-  
   while(millis() - start_2 < 500){
     cadency = countRpm();
   }
 
   avg_cadency = getAvgCad(cadency);
-  display.showCompass(heading);
+
+  // obliczenie sredniej predkosci
   float avg_speed = getAvgSpeed(speed);
 
-  display.showAvgSpeed(avg_speed);
 
-  if(button_prev == HIGH && digitalRead(button_pin) == LOW){
-    startActivity();
+  // uruchomienie aktywnosci i zapis na karcie sd pliku GPX
+  if(status_sd == 1){
+    if(button_prev == HIGH && digitalRead(button_pin) == LOW){
+      startActivity();
+    }
+
+    button_prev = digitalRead(button_pin);
+
+    if(activity_started == 1){
+      createGpx(gps);
+    }
+  }else{
+    display.error("NO SD CARD");
   }
 
-  button_prev = digitalRead(button_pin);
-
-  if(activity_started == 1){
-    createGpx(gps);
-  }
-
-  display.status(compass, gps, activity_started);
-
-  display.showAvgCadency(avg_cadency);
-  display.showCurCadency(cadency);
+  // wyswietlenie wszystkich wartosci
+  display.showCompass(heading);
   display.showCoords(gps.getLat(), gps.getLon(), gps.getAlt());
   display.showCurSpeed(speed);
-  smartDelay(20);
+  display.showAvgSpeed(avg_speed);
+  display.showAvgCadency(avg_cadency);
+  display.showCurCadency(cadency);
+
+  display.status(status_compass, gps, status_sd, activity_started);
 }
 
 void startActivity(){
@@ -153,7 +168,6 @@ void createGpx(GPS &gps){
       gps.getYear(),
       gps.getMonth(),
       gps.getDay());
-
 
   // if the file opened okay, write to it:
   if(gps.getLat() != 0){

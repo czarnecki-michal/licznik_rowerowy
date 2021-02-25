@@ -4,7 +4,6 @@
 
 void Display::showGrid(){
     TFT_eSPI::fillRect(0, 0, 320, 10, TFT_NAVY);
-    
 }
 
 void Display::showAvgCadency(float avg_cadency){
@@ -88,31 +87,46 @@ void Display::error(String msg){
     TFT_eSPI::drawRect(0, 300, 320, 20, TFT_RED);
     TFT_eSPI::setTextColor(TFT_WHITE, TFT_RED);
     TFT_eSPI::fillRect(0, 300, 320, 20, TFT_RED);
-    TFT_eSPI::setCursor(0, 300);
+    TFT_eSPI::setCursor(50, 303);
     TFT_eSPI::print(msg);
-    Serial.println(msg);
 }
-void Display::status(HMC5883L &compass, TinyGPSPlus &gps, int activity){
+
+void Display::status(bool compass, TinyGPSPlus &gps, bool status_sd, int activity){
     TFT_eSPI::setTextSize(1);
-    // TFT_eSPI::drawRect(0, 0, 320, 10, TFT_NAVY);
     TFT_eSPI::fillRect(0, 0, 320, 10, TFT_NAVY);
     TFT_eSPI::setTextColor(TFT_WHITE, TFT_NAVY);
     TFT_eSPI::setCursor(0, 2);
+
     if(gps.location.isValid()){
         TFT_eSPI::print("GPS: ");
         TFT_eSPI::print(gps.satellites.value());
     }
-    TFT_eSPI::print(" CMP: OK ");
+
+    if (compass == 1){
+        TFT_eSPI::print(" CMP ");
+    }else{
+        TFT_eSPI::print(" NO CMP ");
+    }
 
     if (true){
         TFT_eSPI::print(" HAL: OK ");
     }
 
-    TFT_eSPI::setCursor(200, 2);
-    if(activity == 1){
-        TFT_eSPI::print(" > ");
+
+    if (status_sd == 1){
+        TFT_eSPI::setCursor(150, 2);
+        TFT_eSPI::print(" SD ");
+
+        TFT_eSPI::setCursor(200, 2);
+        if(activity == 1){
+            TFT_eSPI::print(" > ");
+        }else{
+            TFT_eSPI::print(" || ");
+        }
+        
     }else{
-        TFT_eSPI::print(" || ");
+        TFT_eSPI::setCursor(150, 2);
+        TFT_eSPI::print(" NO SD ");
     }
 }
 

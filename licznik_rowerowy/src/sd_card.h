@@ -6,14 +6,18 @@
 
 File myFile;
 
-void initializeSdCard(){
+bool initializeSdCard(){
     Serial.print("Initializing SD card...");
 
-    if (!SD.begin(26)) {
+    bool sd_init = SD.begin(26);
+
+    if (!sd_init) {
         Serial.println("initialization failed!");
-        while (1);
+        return false;
+    }else{
+        Serial.println("initialization done.");
+        return true;
     }
-    Serial.println("initialization done.");
 }
 
 // void writeToFile(String msg){

@@ -23,7 +23,7 @@ public:
     void showAvgSpeed(float avg_speed);
     void showCompass(int heading);
     void error(String msg);
-    void status(HMC5883L &compass, TinyGPSPlus &gps, int activity = 0);
+    void status(bool compass, TinyGPSPlus &gps, bool status_sd, int activity = 0);
 };
 
 #endif /* DISPLAY_H */
