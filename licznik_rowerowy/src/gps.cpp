@@ -25,6 +25,22 @@ void GPS::getGpsInfo(){
     }
 }
 
+String GPS::getDatetime(){
+    if (GPS::date.isValid()){
+        String datetime = String(
+                String(GPS::getYear()) + '-' +
+                String(GPS::getMonth()) + '-' +
+                String(GPS::getDay()) + 'T' +
+                String(GPS::time.hour()) + ':' +
+                String(GPS::time.minute()) + ':' +
+                String(GPS::time.second()) + 'Z'
+                );
+        
+        return datetime;
+    }
+    return "2000-01-01T00:00:00Z";
+}
+
 
 float GPS::getLat(){
     return this->lat;

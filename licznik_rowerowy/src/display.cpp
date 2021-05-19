@@ -62,7 +62,7 @@ void Display::showCurSpeed(float speed){
     TFT_eSPI::print(speed, 1);
 
     TFT_eSPI::setTextSize(2);
-    TFT_eSPI::setCursor(145, 165);
+    TFT_eSPI::setCursor(155, 145);
     TFT_eSPI::print("KM/H");
 }
 
@@ -93,7 +93,7 @@ void Display::error(String msg){
 
 void Display::status(bool compass, TinyGPSPlus &gps, bool status_sd, int activity){
     TFT_eSPI::setTextSize(1);
-    TFT_eSPI::fillRect(0, 0, 320, 10, TFT_NAVY);
+    TFT_eSPI::fillRect(0, 0, 240, 10, TFT_NAVY);
     TFT_eSPI::setTextColor(TFT_WHITE, TFT_NAVY);
     TFT_eSPI::setCursor(0, 2);
 
@@ -138,7 +138,7 @@ void Display::showCompass(int angle){
     int x0 = center_x;
     int y0 = center_y - radius;
     
-    float rad = angle;
+    float rad = angle*PI/180;
 
     int x0_new = (x0 - center_x) * cos(rad) - (y0 - center_y) * sin(rad) + center_x;
     int y0_new = (x0 - center_x) * sin(rad) + (y0 - center_y) * cos(rad) + center_y;

@@ -24,6 +24,7 @@ public:
     uint16_t getMonth();
     uint16_t getDay();
     void getGpsInfo();
+    String getDatetime();
 };
 
 #endif /* DISPLAY_H */

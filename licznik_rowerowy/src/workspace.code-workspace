@@ -6,6 +6,10 @@
 		{
 			"name": "licznik_rowerowy",
 			"path": ".."
+		},
+		{
+			"name": "termometr",
+			"path": "..\\..\\..\\..\\..\\..\\Documents\\PlatformIO\\Projects\\termometr"
 		}
 	],
 	"settings": {}

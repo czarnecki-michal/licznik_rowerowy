@@ -9,7 +9,15 @@ File myFile;
 bool initializeSdCard(){
     Serial.print("Initializing SD card...");
 
-    bool sd_init = SD.begin(26);
+    bool sd_init = false;
+
+    while(!sd_init){
+        Serial.print("Initializing SD card...");
+        sd_init = SD.begin(26);
+        if(millis() > 20000U){
+            break;
+        }
+    };
 
     if (!sd_init) {
         Serial.println("initialization failed!");
@@ -19,24 +27,6 @@ bool initializeSdCard(){
         return true;
     }
 }
-
-// void writeToFile(String msg){
-//     myFile = SD.open("test.txt", FILE_WRITE);
-
-//     // if the file opened okay, write to it:
-//     if (myFile) {
-//         Serial.print("Writing to test.txt...");
-//         myFile.println(msg);
-//         // close the file:
-//         myFile.close();
-//         Serial.println("done.");
-//     } else {
-//         // if the file didn't open, print an error:
-//         Serial.println("error opening test.txt");
-//     }
-// }
-
-
 
 
 
